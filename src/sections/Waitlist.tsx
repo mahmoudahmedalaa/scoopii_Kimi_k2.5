@@ -10,7 +10,7 @@ const GOOGLE_SHEETS_URL = '';
 
 export function Waitlist() {
   const { ref, isVisible } = useScrollAnimation<HTMLDivElement>();
-  
+
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
@@ -20,7 +20,7 @@ export function Waitlist() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    
+
     // Validate inputs
     if (!firstName.trim() || !lastName.trim() || !email.trim()) {
       setStatus({ type: 'error', message: 'Please fill in all fields.' });
@@ -37,40 +37,37 @@ export function Waitlist() {
     }
 
     try {
-      // If Google Sheets URL is configured, submit to it
-      if (GOOGLE_SHEETS_URL) {
-        const response = await fetch(GOOGLE_SHEETS_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            firstName: firstName.trim(),
-            lastName: lastName.trim(),
-            email: email.trim().toLowerCase(),
-            timestamp: new Date().toISOString(),
-            source: window.location.hostname,
-          }),
-        });
-        
-        if (!response.ok) throw new Error('Submission failed');
-      }
-      
-      // Simulate network delay for better UX (remove when using real backend)
-      await new Promise(resolve => setTimeout(resolve, 500));
-      
-      setStatus({ 
-        type: 'success', 
-        message: "You've been added to the waitlist! We'll be in touch soon." 
+      const response = await fetch('/api/preorder', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          firstName: firstName.trim(),
+          lastName: lastName.trim(),
+          email: email.trim().toLowerCase(),
+        }),
       });
-      
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Submission failed');
+      }
+
+      setStatus({
+        type: 'success',
+        message: "You've been added to the waitlist! We'll be in touch soon."
+      });
+
       // Clear form
       setFirstName('');
       setLastName('');
       setEmail('');
-      
+
     } catch (error) {
-      setStatus({ 
-        type: 'error', 
-        message: 'Something went wrong. Please try again later.' 
+      console.error(error);
+      setStatus({
+        type: 'error',
+        message: 'Something went wrong. Please try again later.'
       });
     } finally {
       setIsSubmitting(false);
@@ -82,9 +79,8 @@ export function Waitlist() {
       <div className="max-w-7xl mx-auto px-6">
         <div ref={ref} className="max-w-2xl mx-auto">
           <div
-            className={`text-center space-y-4 mb-10 transition-all duration-700 ${
-              isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-            }`}
+            className={`text-center space-y-4 mb-10 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+              }`}
           >
             <p className="text-sm font-medium text-neutral-400 uppercase tracking-wider">
               Pre-Order
@@ -98,9 +94,8 @@ export function Waitlist() {
           </div>
 
           <div
-            className={`space-y-6 transition-all duration-1000 ${
-              isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-            }`}
+            className={`space-y-6 transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+              }`}
           >
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="grid sm:grid-cols-2 gap-4">
@@ -131,7 +126,7 @@ export function Waitlist() {
                   />
                 </div>
               </div>
-              
+
               <div className="space-y-2">
                 <Label htmlFor="email" className="text-neutral-600">
                   Email Address
@@ -165,11 +160,10 @@ export function Waitlist() {
 
             {status.type && (
               <div
-                className={`p-4 rounded-2xl text-center transition-all duration-300 ${
-                  status.type === 'success'
+                className={`p-4 rounded-2xl text-center transition-all duration-300 ${status.type === 'success'
                     ? 'bg-green-50 text-green-700'
                     : 'bg-red-50 text-red-700'
-                }`}
+                  }`}
               >
                 {status.message}
               </div>
