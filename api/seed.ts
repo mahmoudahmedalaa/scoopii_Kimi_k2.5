@@ -1,8 +1,8 @@
 import { sql } from '@vercel/postgres';
-import { VercelRequest, VercelResponse } from '@vercel/node';
+import type { VercelRequest, VercelResponse } from '@vercel/node';
 
 export default async function handler(
-    request: VercelRequest,
+    _request: VercelRequest,
     response: VercelResponse
 ) {
     try {
@@ -17,6 +17,11 @@ export default async function handler(
     `;
         return response.status(200).json({ message: 'Table created successfully' });
     } catch (error) {
-        return response.status(500).json({ error });
+        console.error('Seed error:', error);
+        return response.status(500).json({
+            error: 'Database error',
+            details: error instanceof Error ? error.message : String(error),
+            envCheck: !!process.env.POSTGRES_URL
+        });
     }
 }
