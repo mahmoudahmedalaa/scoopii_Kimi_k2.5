@@ -16,8 +16,4 @@ import { LandingPage } from '@/pages/LandingPage';
         </Routes>
       </BrowserRouter>
     );
-  }
-  );
-}
-
-export default App;
+    export default App;
