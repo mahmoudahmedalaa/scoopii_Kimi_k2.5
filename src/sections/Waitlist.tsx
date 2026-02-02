@@ -5,8 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { ArrowRight, Users, Sparkles, Shield } from 'lucide-react';
 
-// Google Sheets Web App URL - Replace this with your deployed script URL
-const GOOGLE_SHEETS_URL = '';
+
 
 export function Waitlist() {
   const { ref, isVisible } = useScrollAnimation<HTMLDivElement>();
@@ -161,8 +160,8 @@ export function Waitlist() {
             {status.type && (
               <div
                 className={`p-4 rounded-2xl text-center transition-all duration-300 ${status.type === 'success'
-                    ? 'bg-green-50 text-green-700'
-                    : 'bg-red-50 text-red-700'
+                  ? 'bg-green-50 text-green-700'
+                  : 'bg-red-50 text-red-700'
                   }`}
               >
                 {status.message}
