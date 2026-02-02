@@ -17,7 +17,7 @@ export default async function handler(
 
   try {
     await sql`
-      INSERT INTO preorders (first_name, last_name, email, created_at)
+      INSERT INTO scoopii_kimi_preorders (first_name, last_name, email, created_at)
       VALUES (${firstName}, ${lastName}, ${email}, NOW())
       ON CONFLICT (email) DO UPDATE SET 
         first_name = EXCLUDED.first_name,

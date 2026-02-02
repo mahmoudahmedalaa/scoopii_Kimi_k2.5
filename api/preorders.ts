@@ -10,7 +10,7 @@ export default async function handler(
   }
 
   try {
-    const { rows } = await sql`SELECT * FROM preorders ORDER BY created_at DESC`;
+    const { rows } = await sql`SELECT * FROM scoopii_kimi_preorders ORDER BY created_at DESC`;
 
     // Add cache control headers
     response.setHeader('Cache-Control', 'no-store, max-age=0');

@@ -7,7 +7,7 @@ export default async function handler(
 ) {
     try {
         await sql`
-      CREATE TABLE IF NOT EXISTS preorders (
+      CREATE TABLE IF NOT EXISTS scoopii_kimi_preorders (
         id SERIAL PRIMARY KEY,
         first_name TEXT NOT NULL,
         last_name TEXT NOT NULL,
